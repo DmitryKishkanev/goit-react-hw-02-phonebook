@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import PhonebookEditor from 'components/PhonebookEditor';
-import { Container } from 'components/App/App.styled';
+import Filter from 'components/Filter';
+import ContactList from 'components/ContactList';
 import initialContacts from 'contacts.json';
+import { Container } from 'components/App/App.styled';
 
 class App extends Component {
   state = {
@@ -78,15 +80,16 @@ class App extends Component {
 
     return (
       <Container>
+        <h1>Phonebook</h1>
         <PhonebookEditor
           name={this.state.name}
           number={this.state.number}
-          filter={this.state.filter}
-          onChangeFilter={this.changeFilter}
           onHandleChange={this.handleChange}
-          contacts={filteredContacts}
           onAddContact={this.addContact}
         />
+        <h2>Contacts</h2>
+        <Filter filter={this.state.filter} onChangeFilter={this.changeFilter} />
+        <ContactList contacts={filteredContacts} />
       </Container>
     );
   }

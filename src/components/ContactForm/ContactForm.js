@@ -1,5 +1,7 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
+import { Form } from 'components/ContactForm/ContactForm.styled';
 
 class ContactForm extends Component {
   state = {
@@ -7,12 +9,16 @@ class ContactForm extends Component {
     number: '',
   };
 
+  static propTypes = {
+    handleAddContact: PropTypes.func.isRequired,
+  };
+
   handleChange = e => {
     const { name, value } = e.currentTarget;
     this.setState({ [name]: value });
   };
 
-  addContact = e => {
+  handleAddContact = e => {
     e.preventDefault();
 
     const nameRegex = /^[a-zA-Zа-яА-ЯёЁ]{2,}(?:[ '-][a-zA-Zа-яА-ЯёЁ]+)*$/u;
@@ -31,7 +37,7 @@ class ContactForm extends Component {
       });
       return;
     }
-
+    // Валидация номера
     if (!phoneRegex.test(number)) {
       alert(
         'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +',
@@ -48,17 +54,14 @@ class ContactForm extends Component {
       number: this.state.number,
     };
 
-    this.props.contacts(({ contacts }) => ({
-      contacts: [contact, ...contacts],
-      name: '',
-      number: '',
-    }));
+    this.props.handleAddContact(contact);
+    this.setState({ name: '', number: '' });
   };
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.addContact}>
+      <>
+        <Form onSubmit={this.handleAddContact}>
           <label>
             <span>Name</span>
             <input
@@ -84,8 +87,8 @@ class ContactForm extends Component {
           <button type="submit" className="phonebook__button">
             Добавить
           </button>
-        </form>
-      </div>
+        </Form>
+      </>
     );
   }
 }
